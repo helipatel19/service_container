@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Services\Task\Providers;
 
 use App\Task;
 use App\Services\Task\TaskService;

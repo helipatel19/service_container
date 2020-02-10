@@ -3,14 +3,13 @@
 namespace App\Services\Task;
 
 use App\Repositories\Task\TaskRepository;
-use App\Repositories\User\TaskInterface;
 use App\Task;
 
 class TaskService
 {
 
     /**
-     * @var taskRepo
+     * @var $taskRepo
      */
 
     private $taskRepo;

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
 {
-
     protected $task;
     protected $taskService;
 
