@@ -1,78 +1,101 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Laravel Service Container for task management
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+### Understanding Laravel service container
 
-## About Laravel
+The Laravel service container is a powerful tool for managing class dependencies and performing dependency injection.You can create object automatically using laravel service container instead of creating manually.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### How To Bind Services In Laravel
+You need to register your service container with laravel app, The bindings will be registered by any register method of your service providers.We can register a binding using the bind method, passing the class or interface name that we wish to register along with a Closure that returns an instance of the class.You can get more information from laravel service container.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Following are the available options laravel provides to bind services :
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Simple Bindings
+- Binding Singleton
+- Binding Instances
+- Binding Primitives
+- Binding Interfaces To Implementations
+- Contextual Binding
+- Extending Binding
 
-## Learning Laravel
+### Steps To create Laravel Custom Service Container
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Step 1 : Install Fresh Laravel Project**
 
-## Laravel Sponsors
+    composer create-project –prefer-dist  laravel/laravel service_container
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Now, set up the database in the .env file.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+We will create service container for task management. In order to create that we need to make following files.
 
-## Contributing
+1. Model File
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. Controller File
 
-## Code of Conduct
+3. Migration File
+        
+        
+    php artisan make:model Task -mc
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Above command will create Model , Controller as well as Migration file.
 
-## Security Vulnerabilities
+Modify the up() method of the migration file.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Now, go to the terminal and hit the following command.
 
-## License
+    php artisan migrate
+  
+**Step 2 : Create TaskService and TaskServiceProvider**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. create a directories with the name **Services.** and **Repositories**.
+2. create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **Taskrepository** files inside Repositories directory.
+3. register TaskService into provider's register method like below.
+
+
+        public function register()
+        {
+           $this->app->bind(TaskService::class, function ($app) {
+                return new TaskService($app[ TaskInterface::class ]);
+           });
+        }
+        
+Get the services provided by the provider.
+    
+    public function provides()
+        {
+           return [TaskService::class];
+        }
+        
+In addition to this, we will register TaskServiceProvider into the providers array of the config.php file.
+
+4. In our next step, we will define method into TaskInterface.php
+
+         public function viewTasks();
+   
+   TaskRepository will extend the methods of TaskInterface
+     
+        public function viewTasks()
+        {
+            return Task::all();
+        }
+    
+    we can now use this method into TaskService throgh the taskRepo .
+   
+       public function getAllTasks()
+           {
+               return $this->taskRepo->viewTasks();
+           }
+
+5. create an instance of TaskService and use it inside index method of TaskController.
+
+  we will also need a route file that points to the tasks url. Go to your route file web.php which is located under routes folder and add a GET route for the tasks url.
+    
+    Route::get('/', 'TaskController@index');
+
+Next, we have used getAllTasks() method of TaskServices to view all the tasks.
+
+        public function index()
+        {
+            $tasks = $this->taskService->getAllTasks();
+            return redirect('/task');
+        }
