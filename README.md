@@ -99,6 +99,27 @@ Next, we have used getAllTasks() method of TaskServices to view all the tasks.
             $tasks = $this->taskService->getAllTasks();
             return $tasks;
         }
+        
+Furthermore, we have also created store() method in the TaskController.
+
+     public function store(Request $request)
+        {
+            $rules = array(
+                'title' => 'required',
+                'description' => 'required',
+            );
+
+        $validator = validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect('/task/create')->withInput()->withErrors($validator);
+        }
+        
+        // this will call the method storeTask from TaskService
+        $this->taskService->storeTask($request->all());
+
+        return redirect('/task');
+    }
 
 You can check this output in your browser.
 
@@ -120,5 +141,26 @@ Here, we have created a test case to verify that user can view tasks:
                 $response->assertOk();
         
             }
-            
-Run the test, and you should get green !
+Now, we have created another test case for adding tasks.
+
+    public function user_can_add_tasks(){
+    
+            //Given we have an authenticated user
+            //And a task object
+            $task = [
+                'title' => $this->faker->sentence,
+                'description' => $this->faker->paragraph,
+            ];
+    
+            $user = factory(User::class)->create();
+    
+            $response = $this->actingAs($user)
+                             ->withSession(['id' => $user->id])
+                             ->post('/task/store', $task);
+    
+            //When user submits post request to create task endpoint
+            //It gets stored in the database
+            $response->assertRedirect('/task');
+        }
+
+Run the tests, and you should get green !
