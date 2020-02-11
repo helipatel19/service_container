@@ -29,3 +29,7 @@ Route::group(['middleware' => ['auth'],'prefix' => 'task'], function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

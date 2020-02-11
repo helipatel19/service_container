@@ -5,7 +5,7 @@
 The Laravel service container is a powerful tool for managing class dependencies and performing dependency injection.You can create object automatically using laravel service container instead of creating manually.
 
 ### How To Bind Services In Laravel
-You need to register your service container with laravel app, The bindings will be registered by any register method of your service providers.We can register a binding using the bind method, passing the class or interface name that we wish to register along with a Closure that returns an instance of the class.You can get more information from laravel service container.
+We need to register any service container with laravel app by using register method of the service provider.We can register a binding using the bind method, passing the class or interface name that we wish to register along with a Closure that returns an instance of the class.
 
 Following are the available options laravel provides to bind services :
 
@@ -17,7 +17,7 @@ Following are the available options laravel provides to bind services :
 - Contextual Binding
 - Extending Binding
 
-### Steps To create Laravel Custom Service Container
+### Create Custom Laravel Service Container
 
 
 **Step 1 : Install Fresh Laravel Project**
@@ -82,9 +82,9 @@ In addition to this, we will register TaskServiceProvider into the providers arr
     we can now use this method into TaskService throgh the taskRepo .
    
        public function getAllTasks()
-           {
-               return $this->taskRepo->viewTasks();
-           }
+       {
+          return $this->taskRepo->viewTasks();
+       }
 
 5. create an instance of TaskService and use it inside index method of TaskController.
 
@@ -97,5 +97,28 @@ Next, we have used getAllTasks() method of TaskServices to view all the tasks.
         public function index()
         {
             $tasks = $this->taskService->getAllTasks();
-            return redirect('/task');
+            return $tasks;
         }
+
+You can check this output in your browser.
+
+### Test case:
+
+Here, we have created a test case to verify that user can view tasks:
+        
+        public function user_can_view_tasks(){
+                
+                $this->actingAs(factory('App\User')->create());
+                
+                //Given we have an task in database
+                $task = factory('App\Task')->make();
+        
+                //When user visit the task page
+                $response = $this->get('/task'); 
+        
+                // an user should be able to view tasks
+                $response->assertOk();
+        
+            }
+            
+Run the test, and you should get green !

@@ -27,7 +27,7 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = $this->taskService->getAllTasks();
-        return redirect('/task');
+        return $tasks;
     }
 
     /**

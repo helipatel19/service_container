@@ -25,10 +25,10 @@ class TasksTest extends TestCase
         $task = factory('App\Task')->make();
 
         //When user visit the task page
-        $response = $this->get('/task'); // your route to get article
+        $response = $this->get('/task');
 
         // an user should be able to view tasks
-        $response->assertRedirect('/task');
+        $response->assertOk();
 
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Task;
 
+use App\Repositories\Task\TaskInterface;
 
 use App\Task;
 
@@ -27,7 +28,7 @@ class TaskRepository implements TaskInterface
             'title' => $data['title'],
             'description' => $data['description'],
         ]);
-        return redirect('/task/');
+        return $task;
     }
 
     /**
@@ -41,7 +42,7 @@ class TaskRepository implements TaskInterface
         $updateTask->description = $data['description'];
         $updated = $updateTask->save();
 
-        return redirect('/task/');
+        return $updated;
     }
 
     /**
@@ -51,7 +52,9 @@ class TaskRepository implements TaskInterface
     public function deleteTaskById($id)
     {
         $deleteTask = Task::findOrFail($id);
-        $deleteTask->delete();
+        $deleted = $deleteTask->delete();
+
+        return $deleted;
     }
 
 
