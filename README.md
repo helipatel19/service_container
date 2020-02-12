@@ -46,9 +46,9 @@ Now, go to the terminal and hit the following command.
   
 **Step 2 : Create TaskService and TaskServiceProvider**
 
-1. create a directories with the name **Services** and **Repositories**.
-2. create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **TaskRepository** files inside Repositories directory.
-3. register TaskService into TaskServiceProvider's register method like below.
+1. Create a directories with the name **Services** and **Repositories**.
+2. Create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **TaskRepository** files inside Repositories directory.
+3. Register TaskService into TaskServiceProvider's register method like below.
 
 
         public function register()
@@ -79,16 +79,16 @@ In addition to this, we will register TaskServiceProvider into the providers arr
            return Task::all();
         }
         
-   we can now use this method into TaskService through the taskRepo instance of TaskRepository.
+   We can now use this method into TaskService through the taskRepo instance of TaskRepository.
 
         public function getAllTasks()
         {
            return $this->taskRepo->viewTasks();
         }
 
-   create an instance of TaskService and use it inside index method of TaskController.
+  Create an instance of TaskService and use it inside index method of TaskController.
 
-   we will also need a route file that points to the tasks url. Go to your route file web.php which is located under routes folder and add a GET route for the tasks url.
+   We will also need a route file that points to the tasks url. Go to your route file web.php which is located under routes folder and add a GET route for the tasks url.
     
         Route::get('/task', 'TaskController@index');
 
@@ -117,14 +117,14 @@ In addition to this, we will register TaskServiceProvider into the providers arr
             return $task;
         }
    
-   we can now use this method into TaskService through the taskRepo instance of TaskRepository.
+   We can now use this method into TaskService through the taskRepo instance of TaskRepository.
 
         public function storeTask(array $parameters)
         {
             return $this->taskRepo->createTask($parameters);
         }
     
-   create an instance of TaskService and use it inside store method of TaskController.
+   Create an instance of TaskService and use it inside store method of TaskController.
    
    Go to your route file ``web.php`` which is located under routes folder and add a POST route for the store task process.
        
