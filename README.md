@@ -21,7 +21,7 @@ Following are the available options laravel provides to bind services :
 
 **Step 1 : Install Fresh Laravel Project**
 
-        composer create-project –prefer-dist  laravel/laravel service_container
+       composer create-project –prefer-dist  laravel/laravel service_container
 
 Now, set up the database in the ``.env`` file.
 
@@ -32,9 +32,8 @@ We will create service container for task management. In order to create that we
 2. Controller File
 
 3. Migration File.
-    
   
-        php artisan make:model Task -mc
+       php artisan make:model Task -mc
 
 Above command will create Model , Controller as well as Migration file.
 
@@ -42,14 +41,13 @@ Modify the up() method of the migration file.
 
 Now, go to the terminal and hit the following command.
 
-        php artisan migrate
+       php artisan migrate
   
 **Step 2 : Create TaskService and TaskServiceProvider**
 
 1. create a directories with the name **Services** and **Repositories**.
 2. create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **TaskRepository** files inside Repositories directory.
 3. register TaskService into TaskServiceProvider's register method like below.
-
 
         public function register()
         {
@@ -59,7 +57,7 @@ Now, go to the terminal and hit the following command.
         }
         
 provides() method will return TaskService.
-    
+
         public function provides()
         {
            return [TaskService::class];
@@ -73,7 +71,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         public function viewTasks;
      
    TaskRepository will extend the methods of TaskInterface
-    
+   
         public function viewTasks()
         {
            return Task::all();
@@ -93,7 +91,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         Route::get('/task', 'TaskController@index');
 
   Next, we have used getAllTasks() method of TaskServices to view all the tasks.
-
+  
         public function index()
         {
             $tasks = $this->taskService->getAllTasks();
@@ -106,7 +104,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
     public function createTask($taskId);
 
    TaskRepository will extend this method and it will perform create task operation .
-    
+   
         public function createTask($data)
         {
             $task = Task::create([
@@ -131,7 +129,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         Route::post('/task/store', 'TaskController@store');
    
    Next, we have used storeTask() method of TaskServices to add task.
-
+   
         public function store(Request $request)
         {
              $rules = array(
@@ -156,7 +154,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
 ### Test cases:
 
 Here, we have created a test case to verify that user can view tasks:
-        
+
         public function user_can_view_tasks(){
                     
            $this->actingAs(factory('App\User')->create());
