@@ -21,7 +21,7 @@ Following are the available options laravel provides to bind services :
 
 **Step 1 : Install Fresh Laravel Project**
 
-        composer create-project –prefer-dist  laravel/laravel service_container
+       composer create-project –prefer-dist  laravel/laravel service_container
 
 Now, set up the database in the ``.env`` file.
 
@@ -32,9 +32,9 @@ We will create service container for task management. In order to create that we
 2. Controller File
 
 3. Migration File.
-    
 
-       php artisan make:model Task -mc
+      
+      php artisan make:model Task -mc
 
 Above command will create Model , Controller as well as Migration file.
 
@@ -50,7 +50,6 @@ Now, go to the terminal and hit the following command.
 2. Create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **TaskRepository** files inside Repositories directory.
 3. Register TaskService into TaskServiceProvider's register method like below.
 
-
         public function register()
         {
            $this->app->bind(TaskService::class, function($app) {
@@ -59,7 +58,7 @@ Now, go to the terminal and hit the following command.
         }
         
 provides() method will return TaskService.
- 
+
         public function provides()
         {
            return [TaskService::class];
@@ -93,7 +92,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         Route::get('/task', 'TaskController@index');
 
   Next, we have used getAllTasks() method of TaskServices to view all the tasks.
-
+  
         public function index()
         {
             $tasks = $this->taskService->getAllTasks();
@@ -131,7 +130,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         Route::post('/task/store', 'TaskController@store');
    
    Next, we have used storeTask() method of TaskServices to add task.
-
+   
         public function store(Request $request)
         {
              $rules = array(
