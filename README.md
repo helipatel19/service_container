@@ -33,8 +33,8 @@ We will create service container for task management. In order to create that we
 
 3. Migration File.
     
-  
-        php artisan make:model Task -mc
+
+       php artisan make:model Task -mc
 
 Above command will create Model , Controller as well as Migration file.
 
@@ -42,7 +42,7 @@ Modify the up() method of the migration file.
 
 Now, go to the terminal and hit the following command.
 
-        php artisan migrate
+       php artisan migrate
   
 **Step 2 : Create TaskService and TaskServiceProvider**
 
@@ -59,7 +59,7 @@ Now, go to the terminal and hit the following command.
         }
         
 provides() method will return TaskService.
-    
+ 
         public function provides()
         {
            return [TaskService::class];
@@ -73,14 +73,14 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         public function viewTasks;
      
    TaskRepository will extend the methods of TaskInterface
-    
+
         public function viewTasks()
         {
            return Task::all();
         }
         
    we can now use this method into TaskService through the taskRepo instance of TaskRepository.
-   
+
         public function getAllTasks()
         {
            return $this->taskRepo->viewTasks();
@@ -106,7 +106,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
     public function createTask($taskId);
 
    TaskRepository will extend this method and it will perform create task operation .
-    
+
         public function createTask($data)
         {
             $task = Task::create([
@@ -118,7 +118,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
         }
    
    we can now use this method into TaskService through the taskRepo instance of TaskRepository.
-   
+
         public function storeTask(array $parameters)
         {
             return $this->taskRepo->createTask($parameters);
@@ -156,7 +156,7 @@ In addition to this, we will register TaskServiceProvider into the providers arr
 ### Test cases:
 
 Here, we have created a test case to verify that user can view tasks:
-        
+
         public function user_can_view_tasks(){
                     
            $this->actingAs(factory('App\User')->create());
