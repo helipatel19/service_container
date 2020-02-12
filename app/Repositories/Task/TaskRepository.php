@@ -19,7 +19,7 @@ class TaskRepository implements TaskInterface
     }
 
     /**
-     * This function will create the new task into databse.
+     * This function will create the new task into database.
      */
 
     public function createTask($data)

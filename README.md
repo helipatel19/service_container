@@ -1,6 +1,6 @@
 # Laravel Service Container for task management
 
-### Understanding Laravel service container
+### What is service container in Laravel
 
 The Laravel service container is a powerful tool for managing class dependencies and performing dependency injection.You can create object automatically using laravel service container instead of creating manually.
 
@@ -19,12 +19,11 @@ Following are the available options laravel provides to bind services :
 
 ### Create Custom Laravel Service Container
 
-
 **Step 1 : Install Fresh Laravel Project**
 
     composer create-project –prefer-dist  laravel/laravel service_container
 
-Now, set up the database in the .env file.
+Now, set up the database in the ``.env`` file.
 
 We will create service container for task management. In order to create that we need to make following files.
 
@@ -34,7 +33,7 @@ We will create service container for task management. In order to create that we
 
 3. Migration File
         
-        
+            
     php artisan make:model Task -mc
 
 Above command will create Model , Controller as well as Migration file.
@@ -47,67 +46,98 @@ Now, go to the terminal and hit the following command.
   
 **Step 2 : Create TaskService and TaskServiceProvider**
 
-1. create a directories with the name **Services.** and **Repositories**.
-2. create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **Taskrepository** files inside Repositories directory.
-3. register TaskService into provider's register method like below.
+1. create a directories with the name **Services** and **Repositories**.
+2. create **TaskServiceProvider.php** and **TaskService.php** files into Services directory as well as **TaskInterface.php** and **TaskRepository** files inside Repositories directory.
+3. register TaskService into TaskServiceProvider's register method like below.
 
 
-        public function register()
-        {
-           $this->app->bind(TaskService::class, function ($app) {
+    public function register()
+    {
+       $this->app->bind(TaskService::class, function($app) {
                 return new TaskService($app[ TaskInterface::class ]);
-           });
-        }
+       });
+    }
         
-Get the services provided by the provider.
+provides() method will return TaskService.
     
     public function provides()
-        {
-           return [TaskService::class];
-        }
+    {
+       return [TaskService::class];
+    }
         
 In addition to this, we will register TaskServiceProvider into the providers array of the config.php file.
 
-4. In our next step, we will define method into TaskInterface.php
+4. In our next step, we will define method for viewing all the tasks into TaskInterface.php
 
-         public function viewTasks();
-   
-   TaskRepository will extend the methods of TaskInterface
+
+     public function viewTasks;
      
-        public function viewTasks()
-        {
-            return Task::all();
-        }
+   TaskRepository will extend the methods of TaskInterface
     
-    we can now use this method into TaskService throgh the taskRepo .
+    public function viewTasks()
+    {
+       return Task::all();
+    }
+    
+   we can now use this method into TaskService through the taskRepo instance of TaskRepository.
    
-       public function getAllTasks()
-       {
-          return $this->taskRepo->viewTasks();
-       }
+    public function getAllTasks()
+    {
+       return $this->taskRepo->viewTasks();
+    }
 
-5. create an instance of TaskService and use it inside index method of TaskController.
+   create an instance of TaskService and use it inside index method of TaskController.
 
-  we will also need a route file that points to the tasks url. Go to your route file web.php which is located under routes folder and add a GET route for the tasks url.
+   we will also need a route file that points to the tasks url. Go to your route file web.php which is located under routes folder and add a GET route for the tasks url.
     
-    Route::get('/', 'TaskController@index');
+    Route::get('/task', 'TaskController@index');
 
-Next, we have used getAllTasks() method of TaskServices to view all the tasks.
+  Next, we have used getAllTasks() method of TaskServices to view all the tasks.
 
-        public function index()
-        {
-            $tasks = $this->taskService->getAllTasks();
-            return $tasks;
-        }
+    public function index()
+    {
+        $tasks = $this->taskService->getAllTasks();
+        return $tasks;
+    }
         
-Furthermore, we have also created store() method in the TaskController.
+5. Not only this, we have also defined method inside TaskInterface to store the task .
 
-     public function store(Request $request)
-        {
-            $rules = array(
-                'title' => 'required',
-                'description' => 'required',
-            );
+    
+    public function createTask($taskId);
+
+   TaskRepository will extend this method and it will perform create task operation .
+    
+    public function createTask($data)
+    {
+        $task = Task::create([
+                'title' => $data['title'],
+               'description' => $data['description'],
+        ]);
+           
+        return $task;
+    }
+   
+   we can now use this method into TaskService through the taskRepo instance of TaskRepository.
+   
+    public function storeTask(array $parameters)
+    {
+        return $this->taskRepo->createTask($parameters);
+    }
+    
+   create an instance of TaskService and use it inside store method of TaskController.
+   
+   Go to your route file ``web.php`` which is located under routes folder and add a POST route for the store task process.
+       
+    Route::post('/task/store', 'TaskController@store');
+   
+   Next, we have used storeTask() method of TaskServices to add task.
+
+    public function store(Request $request)
+     {
+         $rules = array(
+            'title' => 'required',
+            'description' => 'required',
+         );
 
         $validator = validator::make($request->all(), $rules);
 
@@ -121,46 +151,47 @@ Furthermore, we have also created store() method in the TaskController.
         return redirect('/task');
     }
 
-You can check this output in your browser.
+   Now,check this output in your browser.
 
-### Test case:
+### Test cases:
 
 Here, we have created a test case to verify that user can view tasks:
         
-        public function user_can_view_tasks(){
+    public function user_can_view_tasks(){
                 
-                $this->actingAs(factory('App\User')->create());
+       $this->actingAs(factory('App\User')->create());
                 
-                //Given we have an task in database
-                $task = factory('App\Task')->make();
+       //Given we have an task in database
+       $task = factory('App\Task')->make();
         
-                //When user visit the task page
-                $response = $this->get('/task'); 
+       //When user visit the task page
+       $response = $this->get('/task'); 
         
-                // an user should be able to view tasks
-                $response->assertOk();
+       // an user should be able to view tasks
+       $response->assertOk();
         
-            }
+    }
+    
 Now, we have created another test case for adding tasks.
 
-    public function user_can_add_tasks(){
-    
-            //Given we have an authenticated user
-            //And a task object
-            $task = [
+     public function user_can_add_tasks(){
+        
+         //Given we have an authenticated user
+          //And a task object
+           $task = [
                 'title' => $this->faker->sentence,
                 'description' => $this->faker->paragraph,
-            ];
-    
-            $user = factory(User::class)->create();
-    
-            $response = $this->actingAs($user)
+           ];
+        
+           $user = factory(User::class)->create();
+        
+           $response = $this->actingAs($user)
                              ->withSession(['id' => $user->id])
                              ->post('/task/store', $task);
-    
-            //When user submits post request to create task endpoint
-            //It gets stored in the database
-            $response->assertRedirect('/task');
-        }
+        
+           //When user submits post request to create task endpoint
+           //It gets stored in the database
+           $response->assertRedirect('/task');
+     }
 
 Run the tests, and you should get green !
