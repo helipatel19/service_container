@@ -52,7 +52,7 @@ Now, go to the terminal and hit the following command.
         public function register()
         {
            $this->app->bind(TaskService::class, function($app) {
-                    return new TaskService($app[ TaskInterface::class ]);
+                    return new TaskService($app[TaskInterface::class]);
            });
         }
         
