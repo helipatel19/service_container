@@ -34,7 +34,7 @@ We will create service container for task management. In order to create that we
 3. Migration File.
 
       
-      php artisan make:model Task -mc
+      `php artisan make:model Task -mc`
 
 Above command will create Model , Controller as well as Migration file.
 
